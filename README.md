@@ -13,7 +13,7 @@ var name = 'Dustin';
 
 fn();
 
-1 < 2
+1 < 2;
 
 fn(1 < 2); // expressions can be function parameters
 ```
@@ -145,7 +145,7 @@ Often times we want to parse a number from a string. The most common way this is
 var s = "200px",
     n = parseInt(s, 10);
 
-// > n = 10
+// > n = 200
 ```
 
 The first parameter to `parseInt()` is the string to be parse, the second parameter is the radix.
@@ -391,4 +391,18 @@ We have a two equality operators, `==` and `===`. You can think of the first for
 0 === false // > false
 ```
 
-We also have the comparison operators `<`, `=`, `>`.
+We also have the comparison operators `<`, `>`. In terms of numbers, these operators do what you would expect, return a `true` or `false` value.
+
+```javascript
+1 > 2 // > false
+
+10 < 20 // > true
+```
+
+Strings, however, are a little weird.
+
+```javascript
+'a' > 'b' // > false
+```
+
+TODO: I think this is do to the ASCII number associated to the given character.
