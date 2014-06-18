@@ -314,7 +314,7 @@ if (-0) {
 }
 ```
 
-A slighly more complex control flow statement is the `switch` statement. The `switch` statement takes an expression and tests that expression against each case value until a match is found, resulting in that case's list of statements to be executed. If no match is found the default case's list of statments is executed. If the matched case's list of statements does not contain a `break` keyword, you will fall through to the next case.
+A slighly more complex control flow statement is the `switch` statement. The `switch` statement takes an expression and tests that expression against each case value until a match is found, resulting in that case's list of statements to be executed. If no match is found the `default` case's list of statments is executed. If the matched case's list of statements does not contain a `break` keyword, you will fall through to the next case.
 
 ```javascript
 switch (/* expression */) {
@@ -382,27 +382,28 @@ var fn = "someVar" && function() {};
 We have a two equality operators, `==` and `===`. You can think of the first form as 'converted equality', and the second form as 'strict equality'. In the case of `==` the JavaScript interpreter will true to convert the values to the same type before performing the comparison. On the other hand, no such conversion is done for `===`. In almost every situation, you should probably use `===`.
 
 ```javascript
-10 == "10" // > true
+10 == "10"; // > true
 
-10 === "10" // > false
+10 === "10"; // > false
 
-0 == false // > true
+0 == false; // > true
 
-0 === false // > false
+0 === false; // > false
 ```
 
 We also have the comparison operators `<`, `>`. In terms of numbers, these operators do what you would expect, return a `true` or `false` value.
 
 ```javascript
-1 > 2 // > false
+1 > 2; // > false
 
-10 < 20 // > true
+10 < 20; // > true
 ```
 
 Strings, however, are a little weird.
 
 ```javascript
-'a' > 'b' // > false
+'a' > 'b'; // > false
+'c' > 'b'; // > true
 ```
 
-TODO: I think this is do to the ASCII number associated to the given character.
+First the string is converted to it's character code, using `string.charCodeAt` function, and then the comparison is evaluated. In the case of `a > b`, the character code for 'a' is 97 and the character code for b is 98. `97 > 98` resolves to `false`.
