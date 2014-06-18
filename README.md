@@ -257,7 +257,7 @@ for (/* property */ in /* object */) {
 }
 ```
 
-Each iteration of the loop the variable on the left of the `in` keyword get assigned the next 'key' in the object, which will a string value. So if we wanted to print the keys from an object we would write it like this:
+On each iteration of the loop the variable on the left of the `in` keyword get assigned the next 'key' in the object, which will be a string value. So if we wanted to print the keys from an object we would write it like this:
 
 ```javascript
 var obj = { x: 1, y: 2 },
@@ -270,6 +270,8 @@ for (prop in obj) {
 // > "x"
 // > "y"
 ```
+
+#### faster loops ####
 
 When using `for` loops to iterate through arrays, often times authors will check the length of the array on each iteration in their conditional statement.
 
@@ -286,7 +288,7 @@ Since we know the initialization statements only run once, and the conditional s
 
 ```javascript
 var a = [1,2,3,4,5],
-    i, l
+    i, l;
 
 for ( i = 0, l = a.length; i < l; i += 1 ) {
     // zero or more statements
@@ -294,7 +296,7 @@ for ( i = 0, l = a.length; i < l; i += 1 ) {
 ```
 
 ### Conditionals ###
-The most basic conditional statements is the control flow `if` statement. 
+The most basic conditional statements is the control flow statement `if`. 
 
 ```javascript
 if (/* expression */) {
@@ -312,7 +314,7 @@ if (-0) {
 }
 ```
 
-A slighly more complex control flow statement is the `switch` statement. The `switch` statement takes an expression and tests that expression against each case value until a match is found, resulting in that case's list of statements to be executed. If no match is found the default case's list of statments is executed.
+A slighly more complex control flow statement is the `switch` statement. The `switch` statement takes an expression and tests that expression against each case value until a match is found, resulting in that case's list of statements to be executed. If no match is found the default case's list of statments is executed. If the matched case's list of statements does not contain a `break` keyword, you will fall through to the next case.
 
 ```javascript
 switch (/* expression */) {
@@ -327,13 +329,13 @@ switch (/* expression */) {
 }
 ```
 
-The most interesting and convenient conditional is the ternary operator.
+The most interesting and convenient conditional is the ternary operator:
 
 ```javascript
 /* expression */ ? /* truthy return */ : /* falsy return */;
 ```
 
-This operator takes an expression to be evaluated before the `?`. If the expression resolves to `truthy` the value of the expression after the `?` and before the `:` is returned, other wise the value of the expression after the `:` and before the `;` is returned. We use this often for conditional checks.
+This operator takes an expression to be evaluated before the `?`. If the expression resolves to `truthy` the value of the expression after the `?` and before the `:` is returned, other wise the value of the expression after the `:` and before the `;` is returned. We use this often for quick conditional checks.
 
 ```javascript
 var name;
@@ -348,3 +350,45 @@ if (user.name) {
 // short hand
 var name = user.name ? user.name : "";
 ```
+
+#### && and || ####
+We have two logical operators called 'logical and' and 'logical or'. You will see these operators most often is `if` statements.
+
+```javascript
+var name;
+
+if (name && true) {
+    console.log(name);
+}
+// > no log
+
+if (name || true) {
+    console.log(name);
+}
+// > undefined
+```
+
+In the case of `&&`, both expressions need to be true for the entire statement to resolve to a `truthy` value. `||`, on the other hand only needs one of the expressions to resolve to a `truthy` value. Another common use case for these operators is a programming technique called short-circuit evaluation. When assigning a value to a 'logical and' expression, the last `truthy` expression is returned. When assigning a value to a 'logical or' expression, the first true value is returned.
+
+```javascript
+
+options = options || default;
+
+var fn = "someVar" && function() {};
+
+```
+
+### comparisions ###
+We have a two equality operators, `==` and `===`. You can think of the first form as 'converted equality', and the second form as 'strict equality'. In the case of `==` the JavaScript interpreter will true to convert the values to the same type before performing the comparison. On the other hand, no such conversion is done for `===`. In almost every situation, you should probably use `===`.
+
+```javascript
+10 == "10" // > true
+
+10 === "10" // > false
+
+0 == false // > true
+
+0 === false // > false
+```
+
+We also have the comparison operators `<`, `=`, `>`.
