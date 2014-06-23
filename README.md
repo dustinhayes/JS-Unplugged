@@ -534,7 +534,7 @@ The prototype chain for the array is `[] < Array.prototype < Object.prototype`. 
 #### Properties
 
 #### Equality
-Objects in JavaScript are considered equal by reference, not value. This is to say that two object containing the same content are not equal, unless they are the same object in memory.
+Objects in JavaScript are considered equal by reference, not by value. This is to say that two object containing the same content are not equal, unless they are the same object in memory.
 
 ```javascript
 var obj1 = { x: 1 },
