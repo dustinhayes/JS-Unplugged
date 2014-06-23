@@ -407,3 +407,50 @@ Strings, however, are a little weird.
 ```
 
 First the string is converted to it's character code, using `string.charCodeAt` function, and then the comparison is evaluated. In the case of `a > b`, the character code for 'a' is 97 and the character code for b is 98. `97 > 98` resolves to `false`.
+
+## Object ( hash ) & Array
+
+Hashes and Arrays are data structures that provide organization in a Javascript program. This structure can be as simple as storing the options to a module, or as complex as name-spacing for your application.
+
+### Object ( hash )
+
+You will most see JavaScripts `{}` called objects. I think this term is misleading since Arrays and Functions are also considered objects. I prefer the term hash, as this is how most other programing languages label them.
+
+#### Prototypal Inheritance ( brief primer )
+
+#### Creation
+##### Object literals
+##### Constructor creation
+##### Object.create
+
+#### Equality
+
+#### Properties
+
+#### Object iteration
+
+#### Object design patters
+##### Default structures
+##### API structures
+##### Namespaces
+##### Module organization
+
+### Array
+
+#### Arrays are objects
+
+#### Creation
+##### Array literals
+##### Constructor creation
+##### Object.create()
+
+#### Elements
+
+#### [].length
+
+#### Setting, getting, and deleting
+
+#### Methods
+##### Mutators
+##### Accessors
+##### Iterators
