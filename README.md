@@ -450,7 +450,7 @@ var obj = Object.create( {} );
 ```
 
 #### Prototypal Inheritance ( a brief primer )
-All JavaScript objects, including Arrays and Functions, come with an inheritance chain. We call this the prototype chain. The start of this chain is always `Object.prototye`, which is just equal to an object.
+All JavaScript objects, including Arrays and Functions, come with an inheritance chain. We call this the prototype chain. The start of this chain is always `Object.prototye`, which is just an object.
 
 ```javascript
 var o = {};
