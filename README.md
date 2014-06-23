@@ -409,23 +409,162 @@ Strings, however, are a little weird.
 First the string is converted to it's character code, using `string.charCodeAt` function, and then the comparison is evaluated. In the case of `a > b`, the character code for 'a' is 97 and the character code for b is 98. `97 > 98` resolves to `false`.
 
 ## Object ( hash ) & Array
-
 Hashes and Arrays are data structures that provide organization in a Javascript program. This structure can be as simple as storing the options to a module, or as complex as name-spacing for your application.
 
 ### Object ( hash )
-
-You will most see JavaScripts `{}` called objects. I think this term is misleading since Arrays and Functions are also considered objects. I prefer the term hash, as this is how most other programing languages label them.
-
-#### Prototypal Inheritance ( brief primer )
+You will usually see JavaScripts `{}` called an object. I think this term is misleading since Arrays and Functions are also considered objects. I prefer the term hash, as this is how most other programing languages label them.
 
 #### Creation
-##### Object literals
-##### Constructor creation
-##### Object.create
+There are three main ways to create a new hash object.
 
-#### Equality
+##### Object literals
+The most common way is to create what is called an object literal. An object literal is a comma separated list of properties enclosed in curly brackets. We'll get into properties in just a moment.
+
+```javascript
+var obj = {};
+```
+
+This creates a new object in memory and sets the `obj` variable as a reference to that object.
+
+##### Constructor creation
+Use of the constructor form is generally frowned upon. Mainly because it does the same thing as the object literal, but is much longer to type.
+
+```javascript
+// anti-pattern
+var obj = new Object( {} );
+```
+
+The purpose of the `new` operator is to construct 'new' objects. 
+
+##### Object.create
+In it's basic form, `Object.create` does the same thing as the object literal. It does, however, have the ability to allow for much more granular control. The signiture for `Object.create` is as follows:
+
+```javascript
+Object.create( prototype, [ propertyDescriptors ] );
+```
+
+A brief primer on what a prototype is can be found below. In our case, we want to create a hash object, so we use an object literal to specify the prototype.
+
+```javascript
+var obj = Object.create( {} );
+```
+
+#### Prototypal Inheritance ( a brief primer )
+All JavaScript objects, including Arrays and Functions, come with an inheritance chain. We call this the prototype chain. The start of this chain is always `Object.prototye`, which is just equal to an object.
+
+```javascript
+var o = {};
+
+console.dir(o);
+/*
+{
+    __proto__: {
+        __defineGetter__: function __defineGetter__() { [native code] }
+        __defineSetter__: function __defineSetter__() { [native code] }
+        __lookupGetter__: function __lookupGetter__() { [native code] }
+        __lookupSetter__: function __lookupSetter__() { [native code] }
+        constructor: function Object() { [native code] }
+        hasOwnProperty: function hasOwnProperty() { [native code] }
+        isPrototypeOf: function isPrototypeOf() { [native code] }
+        propertyIsEnumerable: function propertyIsEnumerable() { [native code] }
+        toLocaleString: function toLocaleString() { [native code] }
+        toString: function toString() { [native code] }
+        valueOf: function valueOf() { [native code] }
+        get __proto__: function __proto__() { [native code] }
+        set __proto__: function __proto__() { [native code] }
+    }
+}
+*/
+```
+
+The prototype chain for this object is `{} < Object.prototype`. An array will inherit from `Array.prototype`, which inherits from `Object.prototype`.
+
+```javascript
+var a = [];
+
+console.dir(a);
+/*
+{
+    length: 0
+    __proto__: {
+        concat: function concat() { [native code] }
+        constructor: function Array() { [native code] }
+        every: function every() { [native code] }
+        filter: function filter() { [native code] }
+        forEach: function forEach() { [native code] }
+        indexOf: function indexOf() { [native code] }
+        join: function join() { [native code] }
+        lastIndexOf: function lastIndexOf() { [native code] }
+        length: 0
+        map: function map() { [native code] }
+        pop: function pop() { [native code] }
+        push: function push() { [native code] }
+        reduce: function reduce() { [native code] }
+        reduceRight: function reduceRight() { [native code] }
+        reverse: function reverse() { [native code] }
+        shift: function shift() { [native code] }
+        slice: function slice() { [native code] }
+        some: function some() { [native code] }
+        sort: function sort() { [native code] }
+        splice: function splice() { [native code] }
+        toLocaleString: function toLocaleString() { [native code] }
+        toString: function toString() { [native code] }
+        unshift: function unshift() { [native code] }
+        __proto__: {
+            __defineSetter__: function __defineSetter__() { [native code] }
+            __lookupGetter__: function __lookupGetter__() { [native code] }
+            __lookupSetter__: function __lookupSetter__() { [native code] }
+            constructor: function Object() { [native code] }
+            hasOwnProperty: function hasOwnProperty() { [native code] }
+            isPrototypeOf: function isPrototypeOf() { [native code] }
+            propertyIsEnumerable: function propertyIsEnumerable() { [native code] }
+            toLocaleString: function toLocaleString() { [native code] }
+            toString: function toString() { [native code] }
+            valueOf: function valueOf() { [native code] }
+            get __proto__: function __proto__() { [native code] }
+            set __proto__: function __proto__() { [native code] }    
+        }
+    }
+}
+*/
+```
+
+The prototype chain for the array is `[] < Array.prototype < Object.prototype`. All of the properties an object inherits from its prototype will be available on that object. If an object assigns a value to a property of the same name as a property in it's prototype chain, the new property will override the property of the prototype.
 
 #### Properties
+
+#### Equality
+Objects in JavaScript are considered equal by reference, not value. This is to say that two object containing the same content are not equal, unless they are the same object in memory.
+
+```javascript
+var obj1 = { x: 1 },
+    obj2 = { x: 1 };
+    
+obj1 === obj2; // > false
+```
+
+We can make `obj1` equal to `obj2` only if we assign `obj2` to the same object `obj1` references.
+
+```javascript
+var obj1 = { x: 1 },
+    obj2 = obj1;
+    
+obj1 === obj2 // > true
+```
+
+There are interesting ramification of this behavior. For instance, since `obj2` references the same object in memory, if we alter `obj2`, `obj1` with receive the same alterations.
+
+```javascript
+var obj1 = { x: 1 },
+    obj2 = obj1;
+    
+obj1.x; // > 1
+obj2.x; // > 1
+
+obj2.x = 2;
+
+obj1.x // > 2
+```
 
 #### Object iteration
 
