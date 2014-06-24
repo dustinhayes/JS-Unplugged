@@ -412,19 +412,19 @@ First the string is converted to it's character code, using `string.charCodeAt` 
 Hashes and Arrays are data structures that provide organization in a Javascript program. This structure can be as simple as storing the options to a module, or as complex as name-spacing for your application.
 
 ### Object ( hash )
-You will usually see JavaScripts `{}` called an object. I think this term is misleading since Arrays and Functions are also considered objects. I prefer the term hash, as this is how most other programing languages label them.
+You will usually see JavaScripts `{}` symbol called an object. I think this term is misleading since Arrays and Functions are also considered objects. I prefer the term hash, as this is how most other programing languages label them.
 
 #### Creation
 There are three main ways to create a new hash object.
 
 ##### Object literals
-The most common way is to create what is called an object literal. An object literal is a comma separated list of properties enclosed in curly brackets. We'll get into properties in just a moment.
+The most common way is to create what is called an object literal. An object literal is a comma separated list of property-value pairs enclosed in curly brackets. Properties and values are seperated by a colon. We'll get into properties in just a moment.
 
 ```javascript
-var obj = {};
+var emptyObj = {},
+    propvObj = { prop: 'value' };
 ```
-
-This creates a new object in memory and sets the `obj` variable as a reference to that object.
+Both examples create a new object in memory and set the cooresponding variable as a reference to the hash object it's equal to.
 
 ##### Constructor creation
 Use of the constructor form is generally frowned upon. Mainly because it does the same thing as the object literal, but is much longer to type.
@@ -432,9 +432,10 @@ Use of the constructor form is generally frowned upon. Mainly because it does th
 ```javascript
 // anti-pattern
 var obj = new Object( {} );
-```
 
-The purpose of the `new` operator is to construct 'new' objects. 
+console.log( obj ) // > Object {}
+```
+The purpose of the `new` operator is to construct and return 'new' objects. 
 
 ##### Object.create
 In it's basic form, `Object.create` does the same thing as the object literal. It does, however, have the ability to allow for much more granular control. The signiture for `Object.create` is as follows:
@@ -442,11 +443,12 @@ In it's basic form, `Object.create` does the same thing as the object literal. I
 ```javascript
 Object.create( prototype, [ propertyDescriptors ] );
 ```
-
-A brief primer on what a prototype is can be found below. In our case, we want to create a hash object, so we use an object literal to specify the prototype.
+A brief primer on what a prototype is can be found below. In our case, we want to create a hash object, so we use an object literal to specify the prototype. We are not going to cover property descriptors in this course.
 
 ```javascript
 var obj = Object.create( {} );
+
+console.log( obj ) // > Object {}
 ```
 
 #### Prototypal Inheritance ( a brief primer )
@@ -529,7 +531,7 @@ console.dir(a);
 */
 ```
 
-The prototype chain for the array is `[] < Array.prototype < Object.prototype`. All of the properties an object inherits from its prototype will be available on that object. If an object assigns a value to a property of the same name as a property in it's prototype chain, the new property will override the property of the prototype.
+The prototype chain for the array is `[] < Array.prototype < Object.prototype`. All of the properties an object inherits from its prototype will be available on that object. If an object assigns a value to a property of the same name as that of a property in it's prototype chain, the new property will override the property in the prototype chain.
 
 #### Properties
 All objects in JavaScript can have properties assigned to them. This includes Array and Function objects. However, we mostly assign properties to hash objects. 
@@ -549,7 +551,7 @@ o.y;    // > 2
 console.log(o); // > Object { x: 1, y: 2 }
 ```
 
-Although using `[]` is clearly the longer form, there are benefits to using this syntax. Since the value `[]` expects is a just a string, it can be evaluated dynamically.
+Although using `[]` is clearly the longer form, there are benefits to using this syntax. Since the value `[]` expects is just a string, it can be evaluated dynamically.
 
 ```javascript
 var s = 'prop',
@@ -557,8 +559,11 @@ var s = 'prop',
     
 console.log( o[s] ); // > 'value'
 ```
+As a general rule, only use `[]` notation when the value needs to be evaluated at runtime.
 
-Accessing non-existing properties does not throw an error. It simply returns undefined. This can result in hard to find bugs.
+##### Non-existing Properties
+
+Accessing a non-existing property does not throw an error. It simply returns undefined. This can result in hard to find bugs.
 
 ```javascript
 var o = {},
@@ -570,7 +575,19 @@ console.log( p ); // > undefined
 Calling a non-existing properties as a function does throw an error. Since accessing the non-existent property returns undefined you will get the following error: `TypeError: undefined is not a function`.
 
 ##### Functions as Properties
-Speaking of functions, they too can be properties. When we use functions as properties we call them methods. Encapsulating functionality in objects is a very common pattern in JavaScript. Lets look at an example:
+Speaking of functions, they too can be properties. When we use functions as properties we call them methods. 
+
+```javascript
+var module = {
+    method: function () {
+        console.log('Hello!');
+    }
+};
+
+module.method(); // > Hello!
+```
+
+Encapsulating functionality in objects is a very common pattern in JavaScript. Lets look at an example:
 
 ```javascript
 var basket = {
@@ -625,7 +642,7 @@ var obj1 = { x: 1 },
 obj1 === obj2 // > true
 ```
 
-There are interesting ramification of this behavior. For instance, since `obj2` references the same object in memory, if we alter `obj2`, `obj1` with receive the same alterations.
+There are interesting ramification of this behavior. For instance, since `obj2` references the same object in memory, if we alter `obj2`, `obj1` will receive the same alterations.
 
 ```javascript
 var obj1 = { x: 1 },
@@ -640,6 +657,45 @@ obj1.x // > 2
 ```
 
 #### Object iteration
+As mentioned in "Variables, Primitives, Loops, Conditionals & Comparisons", we have the `for in` loop. This loop allows us to iterate through all of the keys in an object.
+
+```javascript
+var o = {
+        x: 1,
+        y: 2,
+        z: 3
+    },
+    prop;
+
+for ( prop in o ) {
+    console.log( prop );
+}
+/*
+x
+y
+z
+*/
+```
+
+Being able to iterate over hash objects like this allows us to perform convienient operations. One example would be extending a hash object with another hash object.
+
+```javascript
+var defaults = {
+        width: '300px',
+        speed: 400
+    },
+    settings = {
+        speed: 200
+    },
+    prop;
+    
+for ( prop in settings ) {
+    defaults[prop] = settings[prop]
+}
+
+console.log( defaults )
+// Object { width: '300px', speed: 200 }
+```
 
 #### Object design patters
 ##### Default structures
