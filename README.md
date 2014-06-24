@@ -532,6 +532,79 @@ console.dir(a);
 The prototype chain for the array is `[] < Array.prototype < Object.prototype`. All of the properties an object inherits from its prototype will be available on that object. If an object assigns a value to a property of the same name as a property in it's prototype chain, the new property will override the property of the prototype.
 
 #### Properties
+All objects in JavaScript can have properties assigned to them. This includes Array and Function objects. However, we mostly assign properties to hash objects. 
+
+##### Setting and Getting Properties
+We have two ways to get or set properties, dot notation `.` and subscript notation `[]`.
+
+```javascript
+var o = {};
+
+o.x     = 1;
+o['y']  = 2;
+
+o['x']; // > 1
+o.y;    // > 2
+
+console.log(o); // > Object { x: 1, y: 2 }
+```
+
+Although using `[]` is clearly the longer form, there are benefits to using this syntax. Since the value `[]` expects is a just a string, it can be evaluated dynamically.
+
+```javascript
+var s = 'prop',
+    o = { prop: 'value' };
+    
+console.log( o[s] ); // > 'value'
+```
+
+Accessing non-existing properties does not throw an error. It simply returns undefined. This can result in hard to find bugs.
+
+```javascript
+var o = {},
+    p = o.x;
+    
+console.log( p ); // > undefined
+```
+
+Calling a non-existing properties as a function does throw an error. Since accessing the non-existent property returns undefined you will get the following error: `TypeError: undefined is not a function`.
+
+##### Functions as Properties
+Speaking of functions, they too can be properties. When we use functions as properties we call them methods. Encapsulating functionality in objects is a very common pattern in JavaScript. Lets look at an example:
+
+```javascript
+var basket = {
+
+    items: [],
+    
+    addItem: function(item) {
+        basket.items.push(item);
+    },
+    
+    getTotal: function() {
+        var tot = 0;
+        
+        basket.items.forEach(function(item) {
+            tot += item.price;
+        });
+        
+        return '$' + tot;
+    }
+
+};
+
+basket.addItem({
+    name: 'dress',
+    price: 50
+});
+
+basket.addItem({
+    name: 'jeans',
+    price: 30 
+});
+
+basket.getTotal();
+```
 
 #### Equality
 Objects in JavaScript are considered equal by reference, not by value. This is to say that two object containing the same content are not equal, unless they are the same object in memory.
