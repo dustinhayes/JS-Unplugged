@@ -869,12 +869,46 @@ var app = {
 ```
 
 ### Array
+Arrays are another fundamental data type. We are mostly interested in using arrays as iterate-able lists, and less so about accessing them, as we do with hash object.
 
 #### Arrays are objects
+Although it's not common to add properties to arrays, it is possible, considering arrays have all of the same abilities as object.
+
+```javascript
+var a = [1, 2, 3, 4];
+
+a.listType = 'numbers';
+
+a.listType; // > numbers
+```
 
 #### Creation
 ##### Array literals
+We've seen a handful of examples of array creation using the array literal syntax.
+
+```javascript
+var a = [];
+```
+Like the hash object, this creates a new array object in memory and assigns the a variable as a reference to that object.
+
 ##### Constructor creation
+We also have an array constructor for creating new arrays. As with hash object, this is not the recommended way to create new arrays.
+
+```javascript
+var a = new Array(1, 2, 3, 4);
+
+a; // > [1, 2, 3, 4]
+```
+
+There is a slight issue with the array constructor. If we supply a single nonnegative integer value as a parameter we will get what is called a sparse array, which is just another word for an array with holes in it.
+
+```javascript
+var a = new Array(10);
+
+a; // [undefined X 10]
+```
+There are edge cases where this can be beneficial. In most cases, it's probably not what you meant.
+
 ##### Object.create()
 
 #### Elements
