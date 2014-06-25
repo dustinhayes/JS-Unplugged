@@ -657,7 +657,7 @@ obj1.x // > 2
 ```
 
 #### Object iteration
-As mentioned in "Variables, Primitives, Loops, Conditionals & Comparisons", we have the `for in` loop. This loop allows us to iterate through all of the keys in an object.
+As mentioned in "Variables, Primitives, Loops, Conditionals & Comparisons", we have the `for in` loop. This loop allows us to iterate through all of the keys in an object. The next example prints all of the keys in the hash.
 
 ```javascript
 var o = {
@@ -696,9 +696,113 @@ for ( prop in settings ) {
 console.log( defaults )
 // Object { width: '300px', speed: 200 }
 ```
+This is such a common pattern that it is usually wrapped up in a reusable function. Functions will be covered in the next session.
+
+```javascript
+var extend = function ( base, exts ) {
+        var prop;
+        
+        for ( prop in exts ) {
+            base[prop] = exts[prop];
+        }
+    },
+    
+    defaults = {
+        width: '300px',
+        speed: 400
+    },
+    
+    settings = {
+        speed: 200
+    };
+    
+extend( defaults, settings );
+    
+console.log( defaults );
+// > Object { width: '300px', speed: 200 }
+```
+
+Using the example from above, where we printed all of the keys in the hash, we can convert that into a reuable function as well.
+
+```javascript
+var each = function ( obj, fn ) {
+        var prop, key, val;
+        
+        for ( prop in obj ) {
+            key = prop;
+            val = obj[prop];
+            
+            fn( val, key );
+        }
+    },
+    
+    o = {
+        x: 1,
+        y: 2,
+        z: 3
+    },
+    
+    logKey = function ( k, v ) { 
+        console.log(v); 
+    };
+    
+each( o, logKey );
+```
+
+There is one issue with `for in`. The loop will iterate though all of the user generated properties added to it's prototype.
+
+```javascript
+var o = { x: 1 },
+    
+    prop;
+
+Object.prototype.y = 2;
+
+for ( prop in o ) {
+    console.log(prop);
+}
+/*
+x
+y
+*/
+```
+
+Thankfully the fix is a simple one. We can use the `Object.hasOwnProperty` method to ensure the property we are iterating over is not an inherited one.
+
+```javascript
+var o = { x: 1 },
+    
+    prop;
+
+Object.prototype.y = 2;
+
+for ( prop in o ) {
+    if ( o.hasOwnProperty( prop ) ) {
+        console.log(prop);
+    }
+}
+// > x
+```
 
 #### Object design patters
-##### Default structures
+There are far to many object design pattern to cover here. Let's go over a few of the most common ones.
+
+##### Default and Sameness structures
+As shown above, objects are often used to store the default settings for a module.
+
+```javascript
+var commentBox = {
+    defaults: {
+        charCount: 500,
+        submitUrl: '/new-comment'
+    },
+    
+    create: function(options) {
+        var settings = extend(defaults, options);
+    }
+};
+```
+
 ##### API structures
 ##### Namespaces
 ##### Module organization
