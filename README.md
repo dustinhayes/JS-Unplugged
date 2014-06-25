@@ -570,8 +570,7 @@ obj[str] = true;
 
 console.dir( obj );
 /*
-Object { 
-I am a valid property: true }
+Object { I am a valid property: true }
 */
 ```
 
@@ -775,11 +774,16 @@ var each = function ( obj, fn ) {
         z: 3
     },
     
-    logKey = function ( k, v ) { 
-        console.log(v); 
+    logKey = function ( v, k ) { 
+        console.log(k); 
     };
     
 each( o, logKey );
+/*
+x
+y
+z
+*/
 ```
 
 There is one issue with `for in`. The loop will iterate though all of the user generated properties added to it's prototype.
@@ -942,9 +946,6 @@ a; // [undefined X 10]
 ```
 There are edge cases where this can be beneficial. In most cases, it's probably not what you meant.
 
-
-add explanation of deleting values from an object
-
 #### Array Elements
 Arrays have key-value pairs, just like hash objects. However, with arrays the keys are always nonnegative integers. Since accessing objects via integers is not generally useful, outside of loops, we're mostly interested in an arrays values, and we call these elements.
 
@@ -970,6 +971,8 @@ var mixed = [
 	undefined
 ];
 ```
+
+Technically all arrays, unless there elements are all numbers. are mixed, since the length property is equal to an integer.
 
 #### Setting, Getting, and Deleting
 We can access an arrays properties with both the dot notation `.` or the subscript notation `[]`. However, since array keys are generally integers, we mostly use subscript notation to access them. When setting, resetting, getting, or deleting elements from an array we use the subscript notation.
@@ -1005,10 +1008,10 @@ length: 4
 ```
 
 #### Array Indexing and the Length Property
-One thing you may have noticed is the first key in the array is 0. Array indexing beings at 0, not 1. Another thing worth noting is the length property that magically appears as a key on the array. The setting and updating of value is always taken care of for you. This feature is what sets arrays apart from other objects. It's existence is what makes looping through arrays successively possible.
+One thing you may have noticed is the first key in the array is 0. Array indexing begins at 0, not 1. Another thing worth noting is the length property that magically appears as a key on the array. The setting and updating of the length value is always taken care of for you. This feature is what sets arrays apart from other objects. It's existence is what makes it possible to loop through arrays successively.
 
 #### Deleting elements from an array
-As with hash object, we can delete elements from an array using the `delete` operator.
+As with hash objects, we can delete elements from an array using the `delete` operator.
 
 ```javascript
 var a = [ 1, 2, 3, 4 ];
@@ -1018,15 +1021,17 @@ delete a[1]; // > true
 a; // > [1, undefined × 1, 3, 4]
 ```
 
-Well that looks odd. If the delete expression was successful the expression will return true, but what's going on with the array now? The issue is that delete operator doesn't do any work to shift the arrays keys around or update the length property. It simply remove that key-value pair from the array.
+Well that looks odd. If the delete expression was successful the expression will return true, but what's going on with the array now? The issue is that delete operator doesn't do any work to shift the arrays keys around or update the length property. It simply removes that key-value pair from the array.
 
 ```javascript
 console.dir( a );
+/*
 Array[4]
 0: 1
 2: 3
 3: 4
 length: 4
+*/
 ```
 
 As noted before, when we created a new array with the `new Array` constructor, this results in a sparse array. It's unlikely this is the result you were hoping for. Thankfully arrays have a method for deleting elements that does work they way we want. This method is described below.
