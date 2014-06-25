@@ -785,27 +785,88 @@ for ( prop in o ) {
 ```
 
 #### Object design patters
-There are far to many object design pattern to cover here. Let's go over a few of the most common ones.
+There are far to many object based design pattern to cover here. Let's go over a few of the most common ones.
 
 ##### Default and Sameness structures
-As shown above, objects are often used to store the default settings for a module.
+As shown above, hash objects are often used to store the default settings for a module.
 
 ```javascript
-var commentBox = {
-    defaults: {
-        charCount: 500,
-        submitUrl: '/new-comment'
-    },
+var typecount = {
+        defaults: {
+            charCount: 75,
+            warnCount: 10
+        },
+        
+        create: function(options) {
+            var settings = extend(defaults, options); // extend() from ealier example
+        }
+    };
     
-    create: function(options) {
-        var settings = extend(defaults, options);
-    }
-};
+typecount.create({
+    charCount: 50 // override the defaults
+});
 ```
 
-##### API structures
+Another similar technique is to use objects to organize things of a similar type. For example, credit card number identifiers. 
+
+```javascript
+var CARD_IDENTIFIERS = {
+        3: 'amex',
+        4: 'visa',
+        5: 'mstr',
+        6: 'disc'
+    },
+    
+    getType = function ( num ) {
+        firstChar = String(num)[0];
+        
+        return CARD_IDENTIFIERS[firstChar];
+    };
+
+getType( 4444678337449988 ); // > visa
+getType( 3744678337449988 ); // > amex
+```
+
+##### APIs
+Hash objects are often used to expose a public API from a module. This provides a level of encapsulation that make programs easier to reason about. We want the API to be easy to work with, so we give the user a common enitity to call methods on.
+
+```javascript
+var privModule = {
+            
+        privMethOne: function() {},
+        
+        privMethTwo: function() {}
+        
+    },
+    
+    module = {
+        pubMeth: function () {
+            privModule.privMethOne();
+            privModule.privMethTwo();
+        }
+    };
+```
+
 ##### Namespaces
-##### Module organization
+One of the most common ways to organize a JavaScript application is to use a Hash object as a namespace.
+
+```javascript
+var app = {
+
+    utils: {
+        core: {}
+    },
+    
+    client: {
+        dom: {}
+    },
+    
+    server: {
+        urls: {}
+    }
+
+};
+```
 
 ### Array
 
