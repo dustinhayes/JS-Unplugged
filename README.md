@@ -1257,7 +1257,7 @@ Apply a function against an accumulator and each value of the array (from left-t
 });
 ```
 
-Unless it's specifed with the second parameter to reduce, the current total begins at 0. If we want to get the sum from an array of number we might write something like this:
+Unless it's specified with the second parameter to reduce, the current total begins at 0. If we want to get the sum from an array of number we might write something like this:
 
 ```javascript
 var add = function(a, b) { return a + b },
@@ -1285,7 +1285,7 @@ merged; // > [1, 2, 3, 4, 5, 6]
 ```
 
 #### Array-like Object
-For something to be considered 'array-like' it must meet a few requirements. One, it must have a length property, and two, it's keys must be nonnegitive values begining at 0. As long as an object meets these requirements all of the methods listed above will work on them. Two common examples of array-like objects: 
+For something to be considered 'array-like' it must meet a few requirements. One, it must have a length property, and two, it's keys must be nonnegative values beginning at 0. As long as an object meets these requirements all of the methods listed above will work on them. Two common examples of array-like objects: 
 * the `arguments` object, which will be covered in the functions session. 
 * an HTMLCollection object (which is what you get when you query for elements in the DOM)
 
