@@ -537,7 +537,7 @@ The prototype chain for the array is `[] < Array.prototype < Object.prototype`. 
 All objects in JavaScript can have properties assigned to them. This includes Array and Function objects. However, we mostly assign properties to hash objects. 
 
 ##### Setting and Getting Properties
-We have two ways to get or set properties, dot notation `.` and subscript notation `[]`.
+We have two ways to access and objects properties, dot notation `.` and subscript notation `[]`.
 
 ```javascript
 var o = {};
@@ -559,7 +559,40 @@ var s = 'prop',
     
 console.log( o[s] ); // > 'value'
 ```
-As a general rule, only use `[]` notation when the value needs to be evaluated at runtime.
+
+We can assign any valid string value as a property of an object.
+
+```javascript
+var str = 'I am a valid property',
+    obj = {};
+    
+obj[str] = true;
+
+console.dir( obj );
+/*
+Object { 
+I am a valid property: true }
+*/
+```
+
+As a general rule, try to only use `[]` notation when the value needs to be evaluated at runtime.
+
+##### Deleting Properties
+Deleting properties from an object is pretty strait forward. We use the `delete` operator.
+
+```javascript
+var o = { x: 1, y: 2 };
+
+delete o.x; // true
+
+o; // > { y: 2 }
+
+delete o['y']; // true
+
+o; // > {}
+
+delete o.x // false
+```
 
 ##### Non-existing Properties
 
@@ -1015,7 +1048,254 @@ a.splice( 1, 1 ); // > [2]
 a; // > [1, 3, 4]
 ```
 
-We have a number of useful mutator methods.
+We have a number of useful mutator methods. All mutator methods automatically update the arrays length for you. Here are some of the common ones.
+
+####### [].push
+Adds one or more elements to the end of an array and returns the new length of the array.
+
+```javascript
+var a = [ 1, 2, 3, 4 ];
+
+a.push(5); // > 5
+
+a; // > [ 1, 2, 3, 4, 5 ]
+
+a.push(6, 7); // 7
+
+a; // > [ 1, 2, 3, 4, 5, 6, 7 ]
+```
+
+####### [].pop
+Removes the last element from an array and returns that element.
+
+```javascript
+var a = [ 1, 2, 3, 4 ];
+
+a.pop(); // > 4
+
+a; // > [ 1, 2, 3 ]
+```
+
+####### [].shift
+Removes the first element from an array and returns that element.
+
+```javascript
+var a = [ 1, 2, 3, 4 ];
+
+a.shift(); // > 1
+
+a; // > [ 2, 3, 4 ]
+```
+
+####### [].unshift
+Adds one or more elements to the front of an array and returns the new length of the array.
+
+```javascript
+var a = [ 1, 2, 3, 4 ];
+
+a.unshift(0); // > 5
+
+a; // > [ 0, 1, 2, 3, 4 ]
+
+a.unshift(-1, -2); // 7
+
+a; // > [ -2, -1, 0, 1, 2, 3, 4 ]
+```
 
 ##### Accessors Methods
+These methods do not modify the array and return some representation of the array.
+
+####### [].concat
+Returns a new array comprised of this array joined with other array(s) and/or value(s).
+
+```javascript
+var a = [1, 2],
+    b = [3, 4],
+    
+    c = a.concat(b);
+
+a; // > [1, 2]
+
+c; // > [1, 2, 3, 4]
+```
+
+####### [].join
+Joins all elements of an array into a string, with a specified delimiter.
+
+```javascript
+var a = [ 1, 2, 3, 4 ],
+
+    commaSep = a.join(','),
+    
+    spaceSep = a.join(' ');
+    
+commaSep; // > "1,2,3,4"
+spaceSep; // > "1 2 3 4"
+```
+
+####### [].slice
+Extracts a section of an array and returns a new array. The first parameter to `slice` is the starting index to begin slicing, the second parameter to `slice` the index to slice upto but not including.
+
+```javascript
+var a = [1, 2, 3, 4],
+
+    fir = a.slice(0, 1), // first element
+    
+    sec = a.slice(1, 2); // second element
+    
+fir; // > [1]
+sec; // > [2]
+
+a; // > [1, 2, 3, 4]
+```
+
+####### [].indexOf
+Returns the first index of an element within the array equal to the specified value, or -1 if none is found.
+
+```javascript
+var a = ['cat', 'dog', 'cow'];
+
+a.indexOf('cow'); // > 2
+
+a.indexOf('worm'); // -1
+```
+
 ##### Iterators Methods
+Itereator methods make dealing with arrays a real joy. Most iterators expect a function as their first argument. We'll keep the functions simple, since we haven't covered functions yet. For an exception of the `reduce` iterator, the function that the iterator expects is supplied with three arguments. The first argument is equal to the current value being iterated over, the second argument is equal to the current key being iterated over, and the third argument is the object the method is being called on.
+
+```javascript
+// iterator signiture
+array.[iterator method](function([current value], [current key], [array]) {
+
+});
+```
+
+####### [].forEach
+Amoung the iterator methods, `forEach` is easily the most common. It simply calls a function for each element in the array.
+
+```javascript
+var ifn = function(val, key, arr) {
+	    console.log(val, 'is at index:', key, 'in', arr);
+    },
+    arr = ['cat', 'dog', 'cow'];
+    
+arr.forEach(ifn);
+/*
+cat is at index: 0 in ["cat", "dog", "cow"]
+dog is at index: 1 in ["cat", "dog", "cow"]
+cow is at index: 2 in ["cat", "dog", "cow"] 
+*/
+```
+
+As an important lesson, and as a basis for how the other iterators are implemented, I think it helps to see how you might implement the `forEach` method.
+
+```javascript
+// place this on the prototype so all arrays inherit it
+// the 'this' value in the function is a reference to the 
+// array instance the method is being called on.
+Array.prototype.forEach = function ( func ) {
+    var len = this.length,
+        ind = 0,
+        key, val;
+        
+    for (ind; ind < len; ind += 1) {
+        key = ind;
+        val = this[key];
+        
+        func( val, key, this );
+    }
+};
+```
+
+####### [].map
+Creates a new array with the results of calling a provided function on every element in this array.
+
+```javascript
+var ifn = function(val, key, arr) {
+	    return 'The ' + val;
+    },
+    arr = ['cat', 'dog', 'cow'],
+    
+    mappedArr = arr.map(ifn);
+    
+mappedArr; // > ["The cat", "The dog", "The cow"]
+```
+
+####### [].some & [].every
+These methods are very similar. `some` returns true if at least one element in this array satisfies the provided testing function. `every` returns true if every element in this array satisfies the provided testing function.
+
+```javascript
+var ifn = function(val, key, arr) {
+	    return typeof val === 'string';
+    },
+    arr = ['cat', 'dog', 'cow', 5];
+    
+arr.every(ifn); // false
+arr.some(ifn); // true
+```
+
+####### [].filter
+Creates a new array with all of the elements of this array for which the provided filtering function returns true.
+
+```javascript
+var ifn = function(val, key, arr) {
+	    return typeof val === 'string';
+    },
+    arr = ['cat', 'dog', 'cow', 5],
+    
+    filteredArr = arr.filter(ifn);
+    
+filteredArr; // > ['cat', 'dog', 'cow']
+```
+
+####### [].reduce
+Apply a function against an accumulator and each value of the array (from left-to-right) as to reduce it to a single value. As mentioned above, this is the only iterator listed that doesn't supply the same parameters to the function it's given. The signiture for reduce is as follows:
+
+```javascript
+[].reduce(function([current total], [current value], [array]) {
+
+});
+```
+
+Unless it's specifed with the second parameter to reduce, the current total begins at 0. If we want to get the sum from an array of number we might write something like this:
+
+```javascript
+var add = function(a, b) { return a + b },
+
+    arr = [1, 2, 3, 4],
+    
+    sum = arr.reduce(add);
+    
+sum; // > 10
+```
+
+Another example might be to merge a bunch of array objects together.
+
+```javascript
+var a = [1, 2],
+    b = [3, 4],
+    c = [5, 6],
+    d = [a, b, c],
+    
+    concat = function (a, b) { return a.concat(b); };
+    
+    merged = d.reduce(concat);
+    
+merged; // > [1, 2, 3, 4, 5, 6]
+```
+
+#### Array-like Object
+For something to be considered 'array-like' it must meet a few requirements. One, it must have a length property, and two, it's keys must be nonnegitive values begining at 0. As long as an object meets these requirements all of the methods listed above will work on them. Two common examples of array-like objects: 
+* the `arguments` object, which will be covered in the functions session. 
+* an HTMLCollection object (which is what you get when you query for elements in the DOM)
+
+Although the methods above will work on these array-like object, they don't inherit from `Array.prototype` so those methods don't exist on them. Thankfully there is a common pattern to turn array-like object into true array object. As mentioned above the `slice` method returns a new array. We can use the `slice` method that exists on `Array.prototype` to turn the array-like object into a true array:
+
+```javascript
+var al = { 0: 'a', 1: 'b', 2: 'c', length: 3 },
+
+    ta = Array.prototype.slice.call(al);
+    
+ta; // > ['a', 'b', 'c']
+```
+
