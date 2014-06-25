@@ -909,15 +909,113 @@ a; // [undefined X 10]
 ```
 There are edge cases where this can be beneficial. In most cases, it's probably not what you meant.
 
-##### Object.create()
 
-#### Elements
+add explanation of deleting values from an object
 
-#### [].length
+##### Array Elements
+Arrays have key-value pairs, just like hash objects. However, with arrays the keys are always nonnegative integers. Since accessing objects via integers is not generally useful, outside of loops, we're mostly interested in an arrays values, and we call these elements.
 
-#### Setting, getting, and deleting
+```javascript
+// e = element
 
-#### Methods
-##### Mutators
+var a = [ 1, 2, 3, 4 ];
+	// e  e  e  e
+```
+
+The elements in a given array can be mixed with any valid JavaScript type. The ability to mix types is very useful.
+
+```javascript
+var mixed = [
+	{ x: 1 },
+	[ 1, 2, 3 ],
+	/\w+/g,
+	function() { console.log('hello'); },
+	10,
+	'hello',
+	false,
+	null,
+	undefined
+];
+```
+
+##### Setting, Getting, and Deleting
+We can access an arrays properties with both the dot notation `.` or the subscript notation `[]`. However, since array keys are generally integers, we mostly use subscript notation to access them. When setting, resetting, getting, or deleting elements from an array we use the subscript notation.
+
+```javascript
+var a = [ 1, 2, 3, 4 ];
+
+console.dir( a );
+/*
+Array[4]
+0: 1
+1: 2
+2: 3
+3: 4
+length: 4
+*/
+
+// get a value from the array
+a[ 0 ]; // > 1
+
+// set a value to an existing slot
+a[ 1 ] = 'new value';
+
+console.dir( a );
+/*
+Array[4]
+0: 1
+1: 'new value'
+2: 3
+3: 4
+length: 4
+*/
+```
+
+##### Array Indexing and the Length Property
+One thing you may have noticed is the first key in the array is 0. Array indexing beings at 0, not 1. Another thing worth noting is the length property that magically appears as a key on the array. The setting and updating of value is always taken care of for you. This feature is what sets arrays apart from other objects. It's existence is what makes looping through arrays successively possible.
+
+##### Deleting elements from an array
+As with hash object, we can delete elements from an array using the `delete` operator.
+
+```javascript
+var a = [ 1, 2, 3, 4 ];
+
+delete a[1]; // > true
+
+a; // > [1, undefined × 1, 3, 4]
+```
+
+Well that looks odd. If the delete expression was successful the expression will return true, but what's going on with the array now? The issue is that delete operator doesn't do any work to shift the arrays keys around or update the length property. It simply remove that key-value pair from the array.
+
+```javascript
+console.dir( a );
+Array[4]
+0: 1
+2: 3
+3: 4
+length: 4
+```
+
+As noted before, when we created a new array with the `new Array` constructor, this results in a sparse array. It's unlikely this is the result you were hoping for. Thankfully arrays have a method for deleting elements that does work they way we want. This method is described below.
+
+##### Array methods
+All of the methods covered below come from `Array.prototype`.
+
+###### Mutator methods
+Mutator methods are methods that alter the array object in memory.
+
+####### [].splice
+As promised `[].splice` is the method we use to delete elements from an array. The first argument this method expects is the index we'd like to begin deleting from. The second argument is the amount of elements to be deleted. The return value is an array containing the elements that were deleted.
+
+```javascript
+var a = [ 1, 2, 3, 4 ];
+
+a.splice( 1, 1 ); // > [2]
+
+a; // > [1, 3, 4]
+```
+
+We have a number of useful mutator methods.
+
 ##### Accessors
 ##### Iterators
