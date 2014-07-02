@@ -1304,3 +1304,23 @@ var al = { 0: 'a', 1: 'b', 2: 'c', length: 3 },
 ta; // > ['a', 'b', 'c']
 ```
 
+To understand how using slice can convert an array-like object into a true array, we must first understand two concepts:
+* `call`
+* `this`
+
+##### Array.prototype.slice Implementation
+```javascript
+Array.prototype.slice = function(start, end) {
+
+    var result = [],
+    	curitr;
+
+    for ( curitr = start; curitr < end; curitr += 1 ) {
+        result.push( this[curitr] );
+    }
+    
+    return result;
+};
+```
+
+The fact that `slice` references `this` with in the function to access the properties 
