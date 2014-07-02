@@ -1,20 +1,30 @@
-Is this a block statement or an expression statement?
+# JS Unplugged Midterm
 
+1. Is this a block statement or an expression statement?
+
+```javascript
 var name = 'dustin';
+```
 
-Is this valid JavaScript?
+2. Is this valid JavaScript?
 
+```javascript
 for ( var i = 0; i < array.length; i += 1 ) ;
+```
 
-What is the result of this expression?
+3. What is the result of this expression?
 
+```javascript
 10 + "20";
+```
 
-How can this be fixed?
+4. How can this be fixed?
 
+```javascript
 var s = 'What's your name?';
+```
 
-Does the code in this if statement execute?
+5. Does the code in this if statement execute?
 
 ```javascript
 if ( -0 ) {
@@ -22,31 +32,37 @@ if ( -0 ) {
 }
 ```
 
-Write a while loop that creates a string of numbers from 0 to 9.
+6. Write a while loop that creates a string of numbers from 0 to 9.
 
-Write the same loop, but use for instead.
+7. Write the same loop, but use `for` instead.
 
-Do we use `for in` for hash objects or array objects?
+8. Do we use `for in` for hash objects or array objects?
 
-How do we access this hash objects property?
+9. How do we access this hash objects property?
 
+```javascript
 var hash = {
         "Hello, from the hash": "got it!"
     };
+```
 
-How do we prevent an object prototype properties from showing up in a `for in` loop?
+10. How do we prevent an object prototype properties from showing up in a `for in` loop?
 
-Is this valid JavaScript?
+11. Is this valid JavaScript?
 
+```javascript
 var a = [1, 2, 3, 4];
 
 a.listType = 'numbers';
+```
 
-What is the resulting array after this operation:
+11. What is the resulting array after this operation:
 
+```javascript
 var a = [1, 2, 3, 4];
 
 delete a[1];
+```
 
-How do we fix it?
+12. How do we fix it?
 
