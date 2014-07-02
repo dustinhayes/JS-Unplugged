@@ -1314,7 +1314,10 @@ Array.prototype.slice = function(start, end) {
 
     var result = [],
     	curitr;
-
+    
+    start = start || 0;
+    end = end || this.length;
+    
     for ( curitr = start; curitr < end; curitr += 1 ) {
         result.push( this[curitr] );
     }
@@ -1323,4 +1326,4 @@ Array.prototype.slice = function(start, end) {
 };
 ```
 
-The fact that `slice` references `this` with in the function to access the properties 
+The fact that `slice` references `this` with in the function to access the properties is what makes this possible. Since we can provide what `this` should be equal to with `call` we effectively treat the object as if it were an array, since it meets the functions requirements.  
