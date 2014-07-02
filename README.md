@@ -953,7 +953,7 @@ Arrays have key-value pairs, just like hash objects. However, with arrays the ke
 // e = element
 
 var a = [ 1, 2, 3, 4 ];
-	// e  e  e  e
+       // e  e  e  e
 ```
 
 The elements in a given array can be mixed with any valid JavaScript type. The ability to mix types is very useful.
