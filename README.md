@@ -1291,7 +1291,7 @@ merged; // > [1, 2, 3, 4, 5, 6]
 
 ## Functions I - The Basics
  
-Ah, functions. The things programs are made of. It's hard to argue that this is where things get the most interesting. Writing functions is what makes you feel like you're really programming. In JavaScript, functions where many hats. We use functions to create functions, methods, construtors, lamdas (anonymous functions), and closures. All with the same syntax.
+Ah, functions. The things programs are made of. It's hard to argue that this is where things get the most interesting. Writing functions is what makes you feel like you're really programming. In JavaScript, functions where many hats. We use functions to create functions, methods, constructors, lambdas (anonymous functions), and closures. All with the same syntax.
 
 ### Function Creation
 
@@ -1302,7 +1302,7 @@ When it comes to creating functions, we have a two options.
 (function () {});
 ```
 
-Unfortunately, we have to wrap `()` around the function to avoid a SyntaxError. `function () {}` is not considered a valid expression. By placing it in parens, the 'grouping' operator which expects a single expression, we can convert it into an expression. You don't really need to worry yourself with these details.
+Unfortunately, we have to wrap `()` around the function to avoid a SyntaxError. `function () {}` is not considered a valid expression. By placing it in parens, the 'grouping' operator which expects a single expression, we can convert it into an expression. You don't really need to worry yourself with these details. 
 
 #### Function Constructor
 ```javascript
@@ -1310,11 +1310,11 @@ Unfortunately, we have to wrap `()` around the function to avoid a SyntaxError. 
 new Function();
 ```
 
-For reasons we're not going to discus, don't use this patttern. It's considered bad pratice. There are a handful of situations where this is useful, but im most cases it's not what you should be reaching for.
+For reasons we're not going to discus, don't use this pattern. It's considered bad practice. There are a handful of situations where this is useful, but in most cases it's not what you should be reaching for.
 
 ### Expression Vs. Named Expression Vs. Declaration
-Obviously `(function () {});` is pretty usless alone. We are most likely creaing this function so we can use it later on. We do that by assigning a reference to the function. There are quite a few ways to assign a reference to a function, some better than others.
-
+Obviously `(function () {});` is pretty useless alone. We are most likely creating this function so we can use it later on. We do that by assigning a reference to the function. There are quite a few ways to assign a reference to a function, some better than others.
+ 
 #### Function Expression
 To create a function expression, we assign an anonymous function to a variable using the `var` keyword.
 ```javascript
@@ -1322,7 +1322,7 @@ var func = function () {};
 ```
 
 #### Named Function Expression
-Naming the function has a few benifits. First, and most importantly, it allows us to see the function name in the console. Second, it allows us to reference the function within the function to allow for recursion. We cover recursion in Functions II. We'll also see more about why this is usful later on.
+Naming the function has a few benefits. First, and most importantly, it allows us to see the function name in the console. Second, it allows us to reference the function within the function to allow for recursion. We cover recursion in Functions II. We'll also see more about why this is useful later on.
 ```javascript
 var funcExp = function () {},
 	funcNamedExp = function func() {};
