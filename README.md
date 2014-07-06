@@ -1,6 +1,6 @@
 JS-Unplugged
 ============
-DOM-less, Library-less JavaScript
+DOM-less, Library-less JavaScript Overview
 
 ## Variables, Primitives, Loops, Conditionals & Comparisons
 
@@ -1217,7 +1217,7 @@ Creates a new array with the results of calling a provided function on every ele
 
 ```javascript
 var ifn = function(val, key, arr) {
-	    return 'The ' + val;
+		return 'The ' + val;
     },
     arr = ['cat', 'dog', 'cow'],
     
@@ -1231,7 +1231,7 @@ These methods are very similar. `some` returns true if at least one element in t
 
 ```javascript
 var ifn = function(val, key, arr) {
-	    return typeof val === 'string';
+		return typeof val === 'string';
     },
     arr = ['cat', 'dog', 'cow', 5];
     
@@ -1265,7 +1265,7 @@ Apply a function against an accumulator and each value of the array (from left-t
 Unless it's specified with the second parameter to reduce, the current total begins at 0. If we want to get the sum from an array of number we might write something like this:
 
 ```javascript
-var add = function(a, b) { return a + b },
+var add = function(a, b) { return a + b; },
 
     arr = [1, 2, 3, 4],
     
@@ -1289,41 +1289,54 @@ var a = [1, 2],
 merged; // > [1, 2, 3, 4, 5, 6]
 ```
 
-#### Array-like Object
-For something to be considered 'array-like' it must meet a few requirements. One, it must have a length property, and two, it's keys must be nonnegative values beginning at 0. As long as an object meets these requirements all of the methods listed above will work on them. Two common examples of array-like objects: 
-* the `arguments` object, which will be covered in the functions session. 
-* an HTMLCollection object (which is what you get when you query for elements in the DOM)
+## Functions I - The Basics
+ 
+Ah, functions. The things programs are made of. It's hard to argue that this is where things get the most interesting. Writing functions is what makes you feel like you're really programming. In JavaScript, functions where many hats. We use functions to create functions, methods, construtors, lamdas (anonymous functions), and closures. All with the same syntax.
 
-Although the methods above will work on these array-like object, they don't inherit from `Array.prototype` so those methods don't exist on them. Thankfully there is a common pattern to turn array-like object into true array object. As mentioned above the `slice` method returns a new array. We can use the `slice` method that exists on `Array.prototype` to turn the array-like object into a true array:
+### Function Creation
 
+When it comes to creating functions, we have a two options. 
+
+#### Function Literals
 ```javascript
-var al = { 0: 'a', 1: 'b', 2: 'c', length: 3 },
-
-    ta = Array.prototype.slice.call(al);
-    
-ta; // > ['a', 'b', 'c']
+(function () {});
 ```
 
-To understand how using slice can convert an array-like object into a true array, we must first understand two concepts:
-* `call`
-* `this`
+Unfortunately, we have to wrap `()` around the function to avoid a SyntaxError. `function () {}` is not considered a valid expression. By placing it in parens, the 'grouping' operator which expects a single expression, we can convert it into an expression. You don't really need to worry yourself with these details.
 
-##### Array.prototype.slice Implementation
+#### Function Constructor
 ```javascript
-Array.prototype.slice = function(start, end) {
-
-    var result = [],
-    	curitr;
-    
-    start = start || 0;
-    end = end || this.length;
-    
-    for ( curitr = start; curitr < end; curitr += 1 ) {
-        result.push( this[curitr] );
-    }
-    
-    return result;
-};
+// anti-pattern
+new Function();
 ```
 
-The fact that `slice` references `this` with in the function to access the properties is what makes this possible. Since we can provide what `this` should be equal to with `call` we effectively treat the object as if it were an array, since it meets the functions requirements.  
+For reasons we're not going to discus, don't use this patttern. It's considered bad pratice. There are a handful of situations where this is useful, but im most cases it's not what you should be reaching for.
+
+### Expression Vs. Named Expression Vs. Declaration
+Obviously `(function () {});` is pretty usless alone. We are most likely creaing this function so we can use it later on. We do that by assigning a reference to the function. There are quite a few ways to assign a reference to a function, some better than others.
+
+#### Function Expression
+To create a function expression, we assign an anonymous function to a variable using the `var` keyword.
+```javascript
+var func = function () {};
+```
+
+#### Named Function Expression
+Naming the function has a few benifits. First, and most importantly, it allows us to see the function name in the console. Second, it allows us to reference the function within the function to allow for recursion. We cover recursion in Functions II. We'll also see more about why this is usful later on.
+```javascript
+var funcExp = function () {},
+	funcNamedExp = function func() {};
+
+console.dir( funcExp );
+console.dir( funcNamedExp );
+```
+
+#### Function Declaration
+We can declare a function without assigning it to a variably by giving it a name.
+```javascript
+function func() {}
+```
+
+I'm not going to go to deep into why this is, in my opinion, bad. The only topic I'll cover, which is some what related to this is Hoisting.
+
+### Hoisting
