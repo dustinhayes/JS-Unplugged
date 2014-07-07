@@ -1407,4 +1407,16 @@ func();
 
 This means you may see programs where functions are invoked before they are defined. Please, for the sake of your future self, and those you work with, don't do this.  
 
+### Arguments and Parameters
+Most often, especially if you're writing your functions for reuse, you will want them to accept a few values. The variables we supply to the function at creation time are called arguments, and the values we pass to the function at invocation time are called parameters.
+
+```javascript
+var func = function (name) {
+	console.log( name );
+};
+
+func('dustin');
+// dustin
+```
+
 
