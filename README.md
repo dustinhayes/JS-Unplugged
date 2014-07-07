@@ -1291,7 +1291,7 @@ merged; // > [1, 2, 3, 4, 5, 6]
 
 ## Functions I - The Basics
  
-Ah, functions. The things programs are made of. It's hard to argue that this is where things get the most interesting. Writing functions is what makes you feel like you're really programming. In JavaScript, functions where many hats. We use functions to create functions, methods, constructors, lambdas (anonymous functions), and closures. All with the same syntax.
+Ah, functions. The things programs are made of. It's hard to argue that this is where things get the most interesting. Writing functions is what makes you feel like you're really programming. In JavaScript, functions where many hats. We use functions to create functions, methods, constructors, lambdas (anonymous functions), and closures. All with the same syntax. 
 
 ### Function Creation
 
@@ -1313,13 +1313,15 @@ new Function();
 For reasons we're not going to discus, don't use this pattern. It's considered bad practice. There are a handful of situations where this is useful, but in most cases it's not what you should be reaching for.
 
 ### Expression Vs. Named Expression Vs. Declaration
-Obviously `(function () {});` is pretty useless alone. We are most likely creating this function so we can use it later on. We do that by assigning a reference to the function. There are quite a few ways to assign a reference to a function, some better than others.
+Obviously `(function () {});` is pretty useless alone. We are most likely creating this function so we can use it later on. We do that by assigning a reference to the function. There are quite a few ways to assign a reference to a function, some better than others. 
  
 #### Function Expression
 To create a function expression, we assign an anonymous function to a variable using the `var` keyword.
 ```javascript
 var func = function () {};
 ```
+
+It should be noted that this does not name the function. `function () {}` remains anonymous. It does, however, allow us to reference the function with a variable name.
 
 #### Named Function Expression
 Naming the function has a few benefits. First, and most importantly, it allows us to see the function name in the console. Second, it allows us to reference the function within the function to allow for recursion. We cover recursion in Functions II. We'll also see more about why this is useful later on.
@@ -1332,11 +1334,77 @@ console.dir( funcNamedExp );
 ```
 
 #### Function Declaration
-We can declare a function without assigning it to a variably by giving it a name.
+We can declare a function without assigning it to a variable by giving it a name.
 ```javascript
 function func() {}
 ```
 
-I'm not going to go to deep into why this is, in my opinion, bad. The only topic I'll cover, which is some what related to this is Hoisting.
+I'm not going to go to deep into why this is, in my opinion, bad. The only topic I'll cover, which is some what related to this is declaration hoisting. Before we cover hoisting, we should talk about how we use functions. 
 
-### Hoisting
+### Function Invocation
+As I said, we usually create functions with the intent to use them at a later point. Preferably more than once. To use a function is to invoke it, and we invoke a function by writing the name of the function, or the variable name that references it, followed by a par of parenthesis `()`. 
+
+```javascript
+var func = function () {};
+
+func();
+```
+
+### Declaration Hoisting
+Now that we know how to invoke a function, we can discuss declaration hoisting. I think MDN has a great explanation of this behavior. I made a few tweaks, shown in *italics*.
+
+> Because variable declarations (and declarations in general) are processed before any code is executed, declaring a variable anywhere in the *current scope* is equivalent to declaring it at the top of the *current scope*. This also means that a variable can appear to be used before it's declared. This behavior is called "hoisting", as it appears that the variable declaration is moved to the top of the *current scope*.
+
+- The original description can be found at https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/var
+
+What will the following function log to the console? 
+
+```javascript
+var func = function () {
+
+	console.log( name );
+
+	var name = 'dustin';
+	
+};
+
+func();
+```
+
+At a low level the example above is equivalent to the following example.
+
+```javascript
+var func = function () {
+
+	var name;
+
+	console.log( name );
+
+	name = 'dustin';
+	
+};
+
+func();
+// undefined
+```
+
+Remembering what we know about `var`, all variables declared without assignment are initialized to `undefined`. A similar thing happens with function declarations, except the whole function is hoisted to the top of the current scope. 
+
+```javascript
+var func = function () {
+	
+	sayHello();
+
+	function sayHello() {
+		console.log('Hello');
+	}
+	
+};
+
+func();
+// Hello
+```
+
+This means you may see programs where functions are invoked before they are defined. Please, for the sake of your future self, and those you work with, don't do this.  
+
+
