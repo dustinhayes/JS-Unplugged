@@ -1340,24 +1340,24 @@ function func() {}
 ```
 
 I'm not going to go to deep into why this is, in my opinion, bad. The only topic I'll cover, which is some what related to this is declaration hoisting. Before we cover hoisting, we should talk about how we use functions. 
-
+ 
 ### Function Invocation
 As I said, we usually create functions with the intent to use them at a later point. Preferably more than once. To use a function is to invoke it, and we invoke a function by writing the name of the function, or the variable name that references it, followed by a par of parenthesis `()`. 
 
 ```javascript
 var func = function () {};
-
+ 
 func();
 ```
 
 ### Declaration Hoisting
-Now that we know how to invoke a function, we can discuss declaration hoisting. I think MDN has a great explanation of this behavior. I made a few tweaks, shown in *italics*.
+Now that we know how to invoke a function, we can discuss declaration hoisting. I think MDN has a great explanation of this behavior. I made a few tweaks, shown in *italics*. 
 
 > Because variable declarations (and declarations in general) are processed before any code is executed, declaring a variable anywhere in the *current scope* is equivalent to declaring it at the top of the *current scope*. This also means that a variable can appear to be used before it's declared. This behavior is called "hoisting", as it appears that the variable declaration is moved to the top of the *current scope*.
 
 - The original description can be found at https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/var
 
-What will the following function log to the console? 
+What will the following function log to the console?  
 
 ```javascript
 var func = function () {
@@ -1371,7 +1371,7 @@ var func = function () {
 func();
 ```
 
-At a low level the example above is equivalent to the following example.
+At a lower level the example above is equivalent to the following example. 
 
 ```javascript
 var func = function () {
@@ -1390,7 +1390,7 @@ func();
 
 Remembering what we know about `var`, all variables declared without assignment are initialized to `undefined`. A similar thing happens with function declarations, except the whole function is hoisted to the top of the current scope. 
 
-```javascript
+```javascript 
 var func = function () {
 	
 	sayHello();
@@ -1408,11 +1408,11 @@ func();
 This means you may see programs where functions are invoked before they are defined. Please, for the sake of your future self, and those you work with, don't do this.  
 
 ### Arguments and Parameters
-Most often, especially if you're writing your functions for reuse, you will want them to accept a few values. The variables we supply to the function at creation time are called arguments, and the values we pass to the function at invocation time are called parameters.
-
+Most often, especially if you're writing your functions for reuse, you will want them to accept a few values. The variables we supply to the function at creation time are called arguments, and the values we pass to the function at invocation time are called parameters. 
+ 
 ```javascript
 var func = function (name) {
-	console.log( name );
+	console.log(name);
 };
 
 func('dustin');
