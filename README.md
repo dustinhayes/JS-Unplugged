@@ -1291,15 +1291,14 @@ merged; // > [1, 2, 3, 4, 5, 6]
 
 ## Functions I - The Basics
  
-Ah, functions. The things programs are made of. It's hard to argue that this is where things get the most interesting. Writing functions is what makes you feel like you're really programming. In JavaScript, functions where many hats. We use functions to create functions, methods, constructors, lambdas (anonymous functions), and closures. All with the same syntax. 
+Ah, functions. The things programs are made of. It's hard to argue that this is where things get the most interesting. Writing functions is what makes you feel like you're really programming. In JavaScript, functions where many hats. We use functions to create functions, methods, constructors, lambdas (anonymous functions), and closures (functions with free variables). All with the same syntax. 
 
 ### Function Creation
-
 When it comes to creating functions, we have a two options. 
 
 #### Function Literals
 ```javascript
-(function () {});
+(function () { /* statements */ });
 ```
 
 Unfortunately, we have to wrap `()` around the function to avoid a SyntaxError. `function () {}` is not considered a valid expression. By placing it in parens, the 'grouping' operator which expects a single expression, we can convert it into an expression. You don't really need to worry yourself with these details. 
@@ -1307,7 +1306,7 @@ Unfortunately, we have to wrap `()` around the function to avoid a SyntaxError. 
 #### Function Constructor
 ```javascript
 // anti-pattern
-new Function();
+new Function( /* statements */ );
 ```
 
 For reasons we're not going to discus, don't use this pattern. It's considered bad practice. There are a handful of situations where this is useful, but in most cases it's not what you should be reaching for.
@@ -1339,15 +1338,18 @@ We can declare a function without assigning it to a variable by giving it a name
 function func() {}
 ```
 
-I'm not going to go to deep into why this is, in my opinion, bad. The only topic I'll cover, which is some what related to this is declaration hoisting. Before we cover hoisting, we should talk about how we use functions. 
+I'm not going to go to deep into why this is, in my opinion, bad. The only topic I'll cover, which is some what related to this, is declaration hoisting. Before we cover hoisting, we should talk about how we use functions. 
  
 ### Function Invocation
 As I said, we usually create functions with the intent to use them at a later point. Preferably more than once. To use a function is to invoke it, and we invoke a function by writing the name of the function, or the variable name that references it, followed by a par of parenthesis `()`. 
 
 ```javascript
-var func = function () {};
+var func = function () {
+	console.log('Hello');
+};
  
 func();
+// > Hello
 ```
 
 ### Declaration Hoisting
@@ -1385,7 +1387,7 @@ var func = function () {
 };
 
 func();
-// undefined
+// > undefined
 ```
 
 Remembering what we know about `var`, all variables declared without assignment are initialized to `undefined`. A similar thing happens with function declarations, except the whole function is hoisted to the top of the current scope. 
@@ -1402,7 +1404,7 @@ var func = function () {
 };
 
 func();
-// Hello
+// > Hello
 ```
 
 This means you may see programs where functions are invoked before they are defined. Please, for the sake of your future self, and those you work with, don't do this.  
@@ -1416,7 +1418,232 @@ var func = function (name) {
 };
 
 func('dustin');
-// dustin
+// > dustin
 ```
 
+#### Ignoring Extras
+One nice thing about arguments and parameters is when you define, or pass extras, you don't get an error. 
+
+```javascript
+// Passing too many
+var funcMany = function (x) {
+   console.log(x);
+};
+funcMany(1, 2, 3);
+// > 1
+
+// passing too few
+var funcFew = function (x, y, z) {
+	console.log(x, y, z);
+};
+funcFew(1);
+// > 1 undefined undefined
+```
+
+When you pass more arguments than the function expects, the extra arguments are ignored. Passing less arguments than the function expects is similar to declaring variables without defining them. They are initialized with undefined.
+
+#### The arguments variable
+Within each function you write you have access to the arguments that are passed into the function at invocation time via the `arguments` variable.
+
+```javascript
+var printArgs = function () {
+	console.log( arguments );
+};
+
+printArgs('Hello', 'From', 'The', 'Arguments');
+// > ["Hello", "From", "The", "Arguments"] 
+```
+
+At first glance, the `arguments` variable looks a lot like an array. Unfortunately, it's not, it's just an object. Worse, it doesn't inherit any array methods. Thankfully, it a least has a length property and keys that look like integers. We can treat objects that have a length property and have keys that look like integers just like arrays. We just have to convert them first. 
+
+#### Array-like Object
+For something to be considered 'array-like' it must meet a few requirements. One, it must have a length property, and two, it's keys must look like nonnegative values beginning at 0. As long as an object meets these requirements most array methods will work on them. Two common examples of array-like objects: 
+* the `arguments` object
+* an HTMLCollection object (which is what you get when you query for elements in the DOM)
+
+Although the methods will work on these array-like object, they don't inherit from `Array.prototype` so those methods don't exist on them. Thankfully there is a common pattern to turn array-like object into true array object. As mentioned above the `slice` method returns a new array. We can use the `slice` method that exists on `Array.prototype` to turn the array-like object into a true array: 
+
+```javascript
+var al = { 0: 'a', 1: 'b', 2: 'c', length: 3 },
+
+    ta = Array.prototype.slice.call(al);
+    
+ta; // > ['a', 'b', 'c']
+```
+
+To understand how using slice can convert an array-like object into a true array, we must first understand two concepts:
+* `call` 
+* `this`
+
+We cover `call` and `this` in great detail in Functions II. For completeness, lets look at the `slice` implementation to get a better understanding of why this works: 
+
+##### Array.prototype.slice Implementation
+```javascript
+Array.prototype.slice = function (start, end) {
+
+    var result = [],
+    	curitr;
+    
+    start = start || 0;
+    end = end || this.length;
+    
+    for ( curitr = start; curitr < end; curitr += 1 ) {
+        result.push( this[curitr] );
+    }
+    
+    return result;
+};
+```
+
+The fact that `slice` references `this` with in the function to access the properties is what makes this possible. Since we can provide what `this` should be equal to with `call` we effectively treat the object as if it were an array, since it meets the functions requirements. 
+
+### Returning Values
+We've seen the `return` keyword a handful of times, but we haven't talked about what it's used for. Similar to the `arguments` variable, each function has it's own `return` keyword. `return` is not a variable though. You cannot change its value or behavior. The purpose of return is to one, return an expression as the functions invocation value, two return execution control to it's parent scope. Whoa, that a lot of words. Lets see some examples.
+
+```javascript
+var getName = function (name) {
+		return name;
+	},
+	name = getName('dustin');
+
+name; // > dustin
+``` 
+
+So we can see, the expression to the right of `return` is equal to the value the function results to when it's invoked.
+
+```javascript
+var outer = function () {
+	var inner = function () {
+		console.log('before I give control');
+		
+		if (true) { return };
+		
+		console.log('I never run');
+	};
+
+	console.log('Jumping into inner');
+	
+	inner();
+	
+	console.log('Got control back');
+};
+
+outer();
+// > Jumping into inner
+// > before I give control
+// > Got control back 
+```
+
+This displays two important concepts. We can return control to the parent scope (parent function), and we can also nest functions. We can even nest functions in nested functions.
+
+```javascript
+var gp = function () {
+
+	var p = function () {
+	
+		var c = function () {
+			return 'Hi from the child';
+		};
+		
+		return c();
+		
+	};
+	
+	return p();
+	
+};
+
+gp();
+// > Hi from the child
+```
+ 
+### Functions As Return Values
+Any valid JavaScript expression can be returned from a function with the `return` keyword. This includes functions.
+
+```javascript
+var getName = function (name) {
+		return function () {
+			return name;
+		};
+	},
+	myName = getName('dustin');
+	
+myName();
+// dustin
+``` 
+
+I know what you're thinking, "What is the use of this crap!". Just stick with me. The important thing to note here is functions can be returned from functions. That's pretty amazing in itself. However, there is another aspect of this that you may not have noticed. `myName` is equal the function `getName` returns. But how does `myName` maintain access to the `name` argument? First, we should talk about function scope.
+
+### Function Scope
+In the current version of JavaScript, we have two kinds of scope, global scope and function scope. Scope is just a word we use to describe the environment in which variables are available. When the JavaScript interpreter starts, it creates a global environment, or global scope where a bunch of things are bound. In the case of a browser, this is typically called the `window`. Anything created in this environment is accessible anywhere within you code. The only other way to create new 'scopes' is to create new functions. Variables within functions are only accessible within that function, and within functions nested in that function. This relationship only works one way. Parent functions do not have access to any variables within its children functions.
+
+```javascript
+var func = function () {
+	var nilbog = 'goblin';
+};
+
+nilbog;
+// > ReferenceError: nilbog is not defined
+
+var func = function () {
+	var trick = 'goblin',
+		reverse = function () {
+			return Array.prototype.slice.call(trick).reverse().join('')
+		};
+		
+	return reverse();
+};
+
+func();
+// > nilbog
+```
+
+The easiest way to describe 'scope' is to represent it with an hash object. The scope for `func` would be something like:
+
+```javascript
+{
+	Global: ...,
+} 
+```
+
+The scope for `reverse` would look something like:
+
+```javascript
+{
+	Global: ...,
+	..: {
+		trick: 'goblin'
+	}
+} 
+```
+
+Where `..` would be equal to the `reverse` functions parent scope. The reason we can reference variables in a parent scope is because of how Javascript does variable resolution. First, it will look within the current scope to find a variable with the name you referenced. If it doesn't find it there, it travels up the 'scope chain'. If it doesn't find a variable by that name by the time it gets to the global scope, you will get a reference error. Now to the question we asked earlier, "how does `myName` maintain access to the `name` argument?". The answer is Closures.
+
+### Closures
+In JavaScript functions have the ability to remember the variables that where in scope when they were defined. When a child function is returned from a parent function, the child maintains access to any of the variable it referenced from it's parent scope. This is an extremely powerful feature of the JavaScript language.
+
+```javascript
+var add = function (x) {
+		return function (y) {
+			return x + y;
+		};
+	},
+	add10 = add(10);
+	
+add10(20);
+// > 30
+```
+
+```javascript
+var mapper = function(func) {
+		   return function(elems) {
+	        return elems.map(func);
+	    }
+	},
+	plusOner = mapper(function(x) { return x + 1; }),
+	sqr = mapper(function (x) { return x * x; });
+	
+plusOner([1,2,3]); // > [2,3,4]
+sqr([1,2,3]); // > [1,4,9] 
+```
 
