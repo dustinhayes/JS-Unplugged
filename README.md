@@ -1647,10 +1647,10 @@ plusOner([1,2,3]); // > [2,3,4]
 sqr([1,2,3]); // > [1,4,9] 
 ```
 
-## Functions II - Context, Combinators, and Decorators
+## Functions II - Context
 
 ### Function Context
-Each function you create has it's own, variable-like value called `this`. Similar to the `arguments` object, the value of `this` is bound when the function is called, not when it is created. At it's core, the rule for what `this` references is pretty simple. It is a reference to the object the function was called on. We call this the receiver. Remembering what we know about defining functions in the global scope, when we do this we are really attaching a function to the global object, or the `window` object in browser environments. Lets look at an example:
+Each function you create has it's own, variable-like value called `this`. Similar to the `arguments` object, the value of `this` is bound when the function is called, not when it is created. At it's core, the rule for what `this` references is pretty simple. It is a reference to the object the function was called on. We call this the receiver. Remembering what we know about defining functions in the global scope, we are really attaching a function to the global object, or the `window` object in browser environments. Lets look at an example:
 
 ```javascript
 var func = function () {
@@ -1660,7 +1660,7 @@ var func = function () {
 func(); // Object window [in browser]
 ```
 
-When we say `func();` we are really saying `global.func();` or `window.func();`. Given the rule, `this` is a reference to the receiver the function was called on, it makes sense that when calling a function in the global scope, `this` would equal the global object. Okay, how about this:
+When we say `func();` we are really saying `global.func();` or `window.func();`. Given this rule, `this` is a reference to the receiver object the function was called on, it makes sense that when calling a function in the global scope, `this` would be equal the global object. Okay, how about this:
 
 ```javascript
 var receiver = {
@@ -1747,11 +1747,11 @@ var orig = {
 recv.func() === recv; // true
 ```
 
-We are just passing functions around. Functions that don't carry the value of `this` with them. Again, this gets bound when the function is called, not when it is defined. We simply call the function on a different object to change the value of `this`. We have another way to change the `this` value by explicitly defining it's value with `call`, `apply`, and `bind`. 
+We are just passing functions around. Functions that don't carry the value of `this` with them. Again, the value of `this` gets bound when the function is called, not when it is defined. We can simply call the function on a different object to change the value of `this`. We have another way to change the `this` value by explicitly defining it's value with `call`, `apply`, and `bind`. 
 
 ### Call, Apply, and Bind
 
-Each function you create come packaged with three useful methods. `call`, `apply`, and `bind`. The first two of these methods almost do the same thing. They both allow you to execute a function, provide what `this` will equal within that function, and supply any parameters the function expects. The difference is in the parameter end of things. For `call`, the parameters are supplied as a comma separated list, as you should be familiar with. `apply`, on the other hand is supplied a single array as a parameter list, which gets expanded into individual parameters. 
+Each function you create comes packaged with three useful methods. `call`, `apply`, and `bind`. The first two of these methods almost do the same thing. They both allow you to execute a function, provide what `this` will equal within that function, and supply any parameters the function expects. The difference is in the parameter end of things. For `call`, the parameters are supplied as a comma separated list, as you should be familiar with. `apply`, on the other hand is supplied a single array as a parameter list, which gets expanded into individual parameters. 
 
 #### Signature for Call and Apply
 ```javascript
@@ -1803,7 +1803,7 @@ ta = Array.prototype.slice.call(al, 1);
 ta; // ['b', 'c']
 ```
 
-Examples of apply usually involve functions as arguments as well as what call function combinators and function decorators. Lets take a look at `bind`. `bind` is similar to `call` in how it takes it's argument list, the major difference is that with `bind` the function is not called immediately, instead it returns a function. The function that is returned remembers the arguments that were passed in originally via closure. Just like `call`, the first argument is the `this` value, followed by a comma separated list of arguments. The function that gets returned expects zero or more arguments, and finally what gets invoked is the original function with all of the arguments pass as it's parameters, and with the `this` bound. When we don't care about the `this` value, we pass `null`.
+Lets take a look at `bind`. `bind` is similar to `call` in how it takes it's argument list, the major difference is that with `bind` the function is not called immediately, instead it returns a function. The function that is returned remembers the arguments that were passed in originally via closure. Just like `call`, the first argument is the `this` value, followed by a comma separated list of zero or more arguments. The function that gets returned expects zero or more arguments, and what gets invoked is the original function with all of the arguments pass as it's parameters, and with the `this` bound. When we don't care about the `this` value, we pass `null`.
 
 ```javascript
 var every = function (func, arr) {
@@ -1816,7 +1816,3 @@ var every = function (func, arr) {
 isOdd([1,3,5,7]); // true
 isOdd([1,3,4,7]); // false
 ```
- 
-We can see we're starting to get into the topic of the next section, which deals with higher-order functions. Higher-order functions are functions that either take functions as parameters, return functions as values, or both.
-
-### Function Combinators and Decorators
