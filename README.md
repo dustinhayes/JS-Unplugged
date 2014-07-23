@@ -1636,7 +1636,7 @@ add10(20);
 
 ```javascript
 var mapper = function(func) {
-		   return function(elems) {
+		return function(elems) {
 	        return elems.map(func);
 	    }
 	},
@@ -1646,4 +1646,99 @@ var mapper = function(func) {
 plusOner([1,2,3]); // > [2,3,4]
 sqr([1,2,3]); // > [1,4,9] 
 ```
+
+## Functions II
+
+[intro] 
+
+### `this` and Invocation Context
+
+Similar to the `arguments` object, every function you create in JavaScript has it's own `this` variable. Which is simlpy a reference to the object the function is attatched to, or `undefined`. To keep things simple, we'll just discuss the rules that apply when in `strict` mode, which you can enable by adding this statement to the top level function scope:
+
+```javascript
+(function () {
+	'use strict';
+}());
+```
+
+The rules for `this` are as follows:
+
+* If we're in the global scope, `this` is equal to the global object.
+* If we're in a function scope, `this` is equal to `undefined`.
+* If we're in a function scope attached to an object, `this` is equal to that object.
+* Reguardless of where we are, we can override `this` with `call` and `apply`.
+
+```javascript
+console.log(this); // Window
+
+(function () {
+	'use strict';
+	
+	console.log(this); // undefined
+	
+	var obj1 = {
+			func: function () {
+				console.log(this);
+			}
+		},
+		obj2 = {x:1};	
+	
+	obj1.func(); // Object obj1
+	
+	obj1.func.call(obj2); // Object obj2
+	obj1.func.apply(obj2); // Object obj2
+}());
+```
+
+We can see the first logged the window object, since it's was outside of the `use strict` declaration. Next we get `undefined`, since we are within the `use strict` declaration, and we're not attached to an object. When we call `func`, which is attached to `obj1`, we get `obj2`. Finally `call` and `apply` do the same thing here. They both allow use to alter what `this` references. 
+
+### Call Apply and Bind
+
+Each function you create comes with two methods , `call` and `apply`. These methods almost do the same thing. They both allow you to execute a function, provide what this will equal within that function, and supply any parameters the function expects. The difference is in the parameter end of things. For `call`, the parameters are supplied as a comma separated list, as you should be familiar with by now. `apply`, on the other hand is supplied a single array as a parameter list, which gets expanded into individual parameters. `bind`, the newest of the bunch, is similar to `call` except for two fundemental features. One, it's not called immediatly, instead it returns a function. Second, that returned function remembers both the `this` value and the arguments passed in originally via closure.
+
+### Signature
+```javascript
+// Call
+func.call(this_val, param1, param2);
+
+// Apply
+func.apply(this_val, [param1, param2]);
+
+//bind
+func.bind(this_val, param1, param2);
+func.bind(this_val, param1)(param2);
+```
+
+#### Use of Call
+You will typically see `call` used when we want to use a function that is attached to 'x' object as if it we're attached to 'y' object.
+
+```javascript
+var x = {
+		name: 'dustin',
+		talk: function (mess) {
+			console.log(mess, this.name);
+		}
+	},
+	y = { name: 'john' };
+	
+x.talk('Hello'); // Hello dustin
+
+x.talk.call(y, 'Hello'); // Hello john
+
+// or (warning: not valid)
+
+Array.prototype = {
+	slice: ...
+};
+
+Array.prototype.slice.call(al); // turning an array like object into an array
+```
+
+Another use ca
+
+This is definately useful, however I think `apply` is much more powerful. The fact that `apply` expects it's argument list as an array, but expands it into a comma seperated list has a ton of use cases. Most of which are used when creating higher-order functions.
+
+#### Use of Apply
+
+
 
